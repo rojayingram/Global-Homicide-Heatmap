@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react';
 import './App.css'
+import axios from 'axios'
+
+export interface Country {
+  id: string;
+  value: string;
+}
+
+export interface Indicator {
+  id: string;
+  value: string;
+}
+
+export interface DataPoint {
+  country: Country;
+  countryiso3code: string;
+  date: string;
+  decimal: number;
+  indicator: Indicator;
+  obs_status: string;
+  unit: string;
+  value: number | null;
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [countries, setCountries] = useState<DataPoint[] | null>(null);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  useEffect(()=>{
+    const url = 'https://api.worldbank.org/v2/country/all/indicator/VC.IHR.PSRC.P5?format=json&per_page=300&date=2019';
+    axios.get(url).then((response)=>{
+    setCountries(response.data[1]);
+    console.log(response.data);
+    })
+  }, []);
+  return (<div className='App'>{countries ? countries.map((country)=>{
+    return (<p key={country.country.id + '|' + country.date}>
+      Country ID: {country.country.id} Country Name: {country.country.value} {country.value}
+      </p>);
+  }) : null}
+  </div>
+);
 }
 
 export default App
