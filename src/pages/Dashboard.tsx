@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { scaleSequential, interpolateRdYlGn, max } from "d3";
-import { Search, ArrowUpDown, X, Home } from "lucide-react";
+import { Search, ArrowUpDown, Home } from "lucide-react";
 
 // Add animation styles
 const style = document.createElement('style');
